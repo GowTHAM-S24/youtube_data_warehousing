@@ -218,7 +218,7 @@ if selected == "Extract and Transform":
                 query = """INSERT INTO channels VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"""
                 
                 for i in collections.find({"Channel_name" : user_inp},{'_id':0}):
-                    mycursor.execute(query,tuple(i.values()))
+                    mycursor.execute(query,tuple(i.values()),)
                     mydb.commit()
                 
         def insert_into_videos():
@@ -226,8 +226,8 @@ if selected == "Extract and Transform":
             query1 = """INSERT INTO videos VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
 
             for i in collectionss.find({"Channel_name" : user_inp},{"_id":0}):
-                t=tuple(i.values())
-                mycursor.execute(query1,t)
+                t=tuple(i.values(),)
+                mycursor.executemany(query1,(tuple(i.values()),))
                 mydb.commit()
 
         def insert_into_comments():
@@ -243,12 +243,12 @@ if selected == "Extract and Transform":
 
         if st.button("Submit"):
             try:
-                
                 insert_into_channels()
                 insert_into_videos()
                 insert_into_comments()
                 st.success("Transformation to MySQL Successful!!!")
-            except:
+            except Exception as error:
+                print("An exception occurred:", error)
                 st.error("Channel details already transformed!!")
             
 # VIEW PAGE
